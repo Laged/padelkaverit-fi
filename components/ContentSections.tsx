@@ -1,6 +1,6 @@
 // components/ContentSections.tsx
 "use client";
-import { FC, useRef, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import ContentCard from "./ContentCard";
 
 interface SectionData {
