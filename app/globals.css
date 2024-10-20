@@ -1,29 +1,11 @@
-/* globals.css */
-
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Source+Sans+Pro:wght@400;500&display=swap");
+/* styles/globals.css */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 @layer base {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Poppins", sans-serif;
-    font-weight: 800;
-  }
-
-  p {
-    font-family: "Source Sans Pro", sans-serif;
-    font-weight: 400;
-  }
+  /* Root Variables */
   :root {
     /* Custom Orange Monochrome Colors */
     --color-primary-a0: #ffffff;
@@ -38,15 +20,17 @@ body {
     --color-primary-a90: #33190d;
     --color-primary-a100: #000000;
 
-    /* Custom Colors */
-    --main: var(--color-primary-a50);
-    --mainAccent: var(--color-primary-a50);
+    /* New Accent Colors */
+    --electric-lime: #ccff00; /* Electric Lime */
+    --electric-purple: #cc00ff; /* Electric Purple */
+
+    /* Overlay */
     --overlay: rgba(0, 0, 0, 0.8);
 
     /* Light mode */
-    --background: var(--color-primary-a0);
-    --foreground: var(--color-primary-a100);
-    --border: var(--color-primary-a100);
+    --background: var(--color-primary-a0); /* #ffa477 */
+    --foreground: var(--color-primary-a100); /* #33190d */
+    --border: var(--color-primary-a100); /* #000000 */
     --secondaryBlack: #212121;
 
     /* shadcn variables */
@@ -57,11 +41,10 @@ body {
     --input: var(--background);
     --ring: var(--border);
     --radius: 0px;
-    --overlay: rgba(0, 0, 0, 0.8);
   }
 
+  /* Dark Mode Variables */
   .dark {
-    /* Reverse or adjust colors for dark mode */
     --color-primary-a0: #000000;
     --color-primary-a10: #33190d;
     --color-primary-a20: #612b13;
@@ -75,14 +58,16 @@ body {
     --color-primary-a100: #ffffff;
 
     /* Custom Colors */
-    --main: var(--color-primary-a50);
-    --mainAccent: var(--color-primary-a50);
+    --electric-lime: #ccff00; /* Electric Lime */
+    --electric-purple: #cc00ff; /* Electric Purple */
+
+    /* Overlay */
     --overlay: rgba(0, 0, 0, 0.8);
 
     /* Dark mode */
-    --background: var(--color-primary-a0);
-    --foreground: var(--color-primary-a100);
-    --border: var(--color-primary-a100);
+    --background: var(--color-primary-a100); /* #ffc3a3 */
+    --foreground: var(--color-primary-a0); /* #ffe1d0 */
+    --border: var(--color-primary-a100); /* #ffffff */
     --secondaryBlack: #212121;
 
     /* shadcn variables */
@@ -95,12 +80,37 @@ body {
     --radius: 0px;
   }
 
-  /* Apply base styles */
+  /* Image Inversion for Dark Mode */
+  .invert-dark {
+    filter: invert(0);
+  }
+  .dark .invert-dark {
+    filter: invert(1);
+  }
+
+  /* Apply Base Styles */
   body {
     @apply bg-background text-foreground;
   }
 
+  /* Apply Borders */
   * {
     @apply border-border;
+  }
+}
+
+@layer utilities {
+  /* Dotted Background for Content Sections */
+  .bg-dotted-orange {
+    background-image: radial-gradient(var(--color-primary-a40) 20px, transparent 20px);
+    background-size: 80px 80px;
+  }
+  .bg-dotted-lime {
+    background-image: radial-gradient(var(--electric-lime) 20px, transparent 20px);
+    background-size: 80px 80px;
+  }
+  .bg-dotted-purple {
+    background-image: radial-gradient(var(--electric-purple) 20px, transparent 20px);
+    background-size: 80px 80px;
   }
 }
