@@ -1,27 +1,25 @@
 // app/layout.tsx
-
 import type { Metadata } from "next";
-import { Poppins, Source_Sans_3 } from 'next/font/google'; // Import Google Fonts
+import { Poppins, Source_Sans_3 } from 'next/font/google';
 import "./globals.css";
 
 
 // Initialize Poppins font for headings
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['800'], // Bold weight for headings
-  variable: '--font-poppins', // CSS variable for Poppins
+  weight: ['800'],
+  variable: '--font-poppins',
 });
 
-// Initialize Source Sans 3 font for paragraphs
 const sourceSansPro = Source_Sans_3({
   subsets: ['latin'],
-  weight: ['400', '500'], // Regular and medium weights for paragraphs
-  variable: '--font-source-sans-3', // CSS variable for Source Sans Pro
+  weight: ['400', '500'],
+  variable: '--font-source-sans-3',
 });
 
 export const metadata: Metadata = {
   title: "Padelkaverit Ry",
-  description: "Good vibes only.",
+  description: "Good vibes only",
 };
 
 export default function RootLayout({

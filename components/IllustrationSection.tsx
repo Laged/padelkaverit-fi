@@ -13,7 +13,6 @@ const IllustrationSection: FC = () => {
             src="/images/illustration.svg"
             alt="Illustration"
             layout="fill"
-            objectFit="contain"
             className="invert-dark"
             priority
           />
@@ -28,7 +27,6 @@ const IllustrationSection: FC = () => {
             alt="Illustration"
             width={800}
             height={800}
-            objectFit="contain"
             className="invert-dark"
             priority
           />

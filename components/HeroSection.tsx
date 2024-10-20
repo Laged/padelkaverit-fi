@@ -5,7 +5,7 @@ import { FC } from "react";
 
 const HeroSection: FC = () => {
   return (
-    <section className="flex h-screen items-center justify-center bg-background">
+    <section className="flex h-screen items-center justify-center bg-background md p-4">
       <Image
         src="/images/padelkaverit.svg"
         alt="Padelkaverit Logo"

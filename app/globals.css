@@ -98,19 +98,12 @@
     @apply border-border;
   }
 }
-
 @layer utilities {
-  /* Dotted Background for Content Sections */
-  .bg-dotted-orange {
-    background-image: radial-gradient(var(--color-primary-a40) 20px, transparent 20px);
+  /* Dotted Background with currentColor */
+  .bg-dotted {
+    color: var(--dot-color, #c74e19); /* Set the dot color via the color property */
+    background-image: radial-gradient(circle 20px, currentColor 20px, transparent 20px);
     background-size: 80px 80px;
-  }
-  .bg-dotted-lime {
-    background-image: radial-gradient(var(--electric-lime) 20px, transparent 20px);
-    background-size: 80px 80px;
-  }
-  .bg-dotted-purple {
-    background-image: radial-gradient(var(--electric-purple) 20px, transparent 20px);
-    background-size: 80px 80px;
+    transition: color 1s ease; /* Smooth transition for color changes */
   }
 }
