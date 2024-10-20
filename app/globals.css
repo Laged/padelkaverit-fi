@@ -1,27 +1,106 @@
+/* globals.css */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Source+Sans+Pro:wght@400;500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+  }
+
+  p {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+  }
+  :root {
+    /* Custom Orange Monochrome Colors */
+    --color-primary-a0: #ffffff;
+    --color-primary-a10: #ffe1d0;
+    --color-primary-a20: #ffc3a3;
+    --color-primary-a30: #ffa477;
+    --color-primary-a40: #ff834b;
+    --color-primary-a50: #ff601a; /* Primary color */
+    --color-primary-a60: #c74e19;
+    --color-primary-a70: #923c17;
+    --color-primary-a80: #612b13;
+    --color-primary-a90: #33190d;
+    --color-primary-a100: #000000;
+
+    /* Custom Colors */
+    --main: var(--color-primary-a50);
+    --mainAccent: var(--color-primary-a50);
+    --overlay: rgba(0, 0, 0, 0.8);
+
+    /* Light mode */
+    --background: var(--color-primary-a0);
+    --foreground: var(--color-primary-a100);
+    --border: var(--color-primary-a100);
+    --secondaryBlack: #212121;
+
+    /* shadcn variables */
+    --primary: var(--main);
+    --primary-foreground: var(--foreground);
+    --destructive: var(--mainAccent);
+    --destructive-foreground: var(--foreground);
+    --input: var(--background);
+    --ring: var(--border);
+    --radius: 0px;
+    --overlay: rgba(0, 0, 0, 0.8);
+  }
+
+  .dark {
+    /* Reverse or adjust colors for dark mode */
+    --color-primary-a0: #000000;
+    --color-primary-a10: #33190d;
+    --color-primary-a20: #612b13;
+    --color-primary-a30: #923c17;
+    --color-primary-a40: #c74e19;
+    --color-primary-a50: #ff601a; /* Primary color remains the same */
+    --color-primary-a60: #ff834b;
+    --color-primary-a70: #ffa477;
+    --color-primary-a80: #ffc3a3;
+    --color-primary-a90: #ffe1d0;
+    --color-primary-a100: #ffffff;
+
+    /* Custom Colors */
+    --main: var(--color-primary-a50);
+    --mainAccent: var(--color-primary-a50);
+    --overlay: rgba(0, 0, 0, 0.8);
+
+    /* Dark mode */
+    --background: var(--color-primary-a0);
+    --foreground: var(--color-primary-a100);
+    --border: var(--color-primary-a100);
+    --secondaryBlack: #212121;
+
+    /* shadcn variables */
+    --primary: var(--main);
+    --primary-foreground: var(--foreground);
+    --destructive: var(--mainAccent);
+    --destructive-foreground: var(--foreground);
+    --input: var(--background);
+    --ring: var(--border);
+    --radius: 0px;
+  }
+
+  /* Apply base styles */
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  * {
+    @apply border-border;
   }
 }
