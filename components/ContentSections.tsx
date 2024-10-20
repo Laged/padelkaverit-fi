@@ -1,7 +1,7 @@
-// components/ContentSections.tsx
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import ContentCard from "./ContentCard";
+import { useActiveColor } from "../hooks/useActiveColor"; // Import the hook
 
 interface SectionData {
   title: string;
@@ -15,42 +15,7 @@ interface ContentSectionsProps {
 }
 
 const ContentSections: FC<ContentSectionsProps> = ({ sections }) => {
-  const [activeColor, setActiveColor] = useState(
-    sections[0]?.initialColor || "var(--color-primary-a40)"
-  );
-
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const target = entry.target as HTMLElement;
-          const color =
-            target.getAttribute("data-active-color") ||
-            "var(--color-primary-a40)";
-          setActiveColor(color);
-        }
-      });
-    };
-
-    const options = {
-      threshold: 0.5,
-    };
-
-    sections.forEach((_, index) => {
-      const section = document.getElementById(`content-card-${index}`);
-      if (section) {
-        const observer = new IntersectionObserver(handleIntersection, options);
-        observer.observe(section);
-        observers.push(observer);
-      }
-    });
-
-    return () => {
-      observers.forEach((observer) => observer.disconnect());
-    };
-  }, [sections]);
+  const activeColor = useActiveColor(sections);
 
   return (
     <section
