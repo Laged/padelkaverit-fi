@@ -1,4 +1,5 @@
 // app/layout.tsx
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from "next";
 import { Poppins, Source_Sans_3 } from 'next/font/google';
 import "./globals.css";
@@ -33,6 +34,7 @@ export default function RootLayout({
         className={`${poppins.variable} ${sourceSansPro.variable} antialiased`}
       >
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
