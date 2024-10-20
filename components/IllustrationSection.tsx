@@ -12,7 +12,6 @@ const IllustrationSection: FC = () => {
           <Image
             src="/images/illustration.svg"
             alt="Illustration"
-            layout="fill"
             className="invert-dark"
             priority
           />

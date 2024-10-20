@@ -57,6 +57,9 @@ const ContentSections: FC<ContentSectionsProps> = ({ sections }) => {
       className="md:w-1/2 bg-dotted transition-colors duration-1000"
       style={{
         color: activeColor,
+        backgroundImage: "radial-gradient(circle 20px, currentColor 20px, transparent 20px)",
+        backgroundSize: "80px 80px",
+        transition: "color 1s ease",
       }}
     >
       <div className="space-y-12 p-12">
