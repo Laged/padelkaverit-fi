@@ -11,7 +11,9 @@ const HeroSection: FC = () => {
       <div className="absolute top-4 right-4">
         <DarkModeToggle />
       </div>
-      <AnimatedSvg svgPath="/images/padelkaverit.svg" />
+      <div className="w-full h-full">
+        <AnimatedSvg />
+      </div>
     </section>
   );
 };
