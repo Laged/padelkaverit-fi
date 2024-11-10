@@ -1,6 +1,3 @@
-// components/HeroSection.tsx
-"use client";
-
 import { FC } from "react";
 import DarkModeToggle from "@/components/DarkModeToggle";
 import AnimatedSvg from "@/components/atoms/AnimatedSvg";

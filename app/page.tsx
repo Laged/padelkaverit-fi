@@ -1,9 +1,8 @@
 // app/page.tsx
 import HeroSection from "@/components/HeroSection";
-import IllustrationSection from "@/components/IllustrationSection";
-import ContentSections from "@/components/ContentSections";
 
 export default function Home() {
+  /*
   const sectionsData = [
     {
       title: "Yhteisö",
@@ -33,6 +32,7 @@ export default function Home() {
       activeColor: "var(--color-primary-a40)",
     },
   ];
+  */
 
   return (
     <main className="bg-background text-foreground">

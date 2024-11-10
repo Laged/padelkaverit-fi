@@ -11,8 +11,6 @@ const AnimatedSvg = ({
   height = "100%",
   className = "",
 }: AnimatedSvgProps) => {
-  const blendMode = "multiply";
-
   const svgViewBox = "0 0 203.974 56.025726";
   const svgWidth = 203.974;
   const svgHeight = 56.025726;
@@ -25,7 +23,7 @@ const AnimatedSvg = ({
     layers: {
       startOpacity: 1,
       endOpacity: 1,
-      blendMode: blendMode,
+      blendMode: "multiply" as const,
       maskOpacity: 1,
       finalRevealAt: 0.4,
       finalRevealDuration: 2.0,

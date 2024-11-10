@@ -6,9 +6,8 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 
-const DarkModeToggle = () =>  {
+const DarkModeToggle = () => {
   const { theme, setTheme } = useTheme();
-  console.log("🚀 ~ DarkModeToggle ~ theme:", theme)
 
   const [mounted, setMounted] = React.useState(false);
 
@@ -33,6 +32,6 @@ const DarkModeToggle = () =>  {
       )}
     </Button>
   );
-}
+};
 
 export default DarkModeToggle;
