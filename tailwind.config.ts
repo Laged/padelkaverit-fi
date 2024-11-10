@@ -1,10 +1,10 @@
 // tailwind.config.ts
 
 import type { Config } from 'tailwindcss';
-import { fontFamily } from 'tailwindcss/defaultTheme'
+import { fontFamily } from 'tailwindcss/defaultTheme';
 
 const config: Config = {
-  darkMode: ['class'], // Enables class-based dark mode
+  darkMode: 'class', // Corrected from ['class'] to 'class'
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -13,23 +13,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        /* Custom Orange Monochrome Colors */
+        // Custom Orange Monochrome Colors
         main: 'var(--color-primary-a50)',
         mainAccent: 'var(--color-primary-a50)', // Not needed for shadcn components
         electricLime: 'var(--electric-lime)', // Electric Lime
         electricPurple: 'var(--electric-purple)', // Electric Purple
         overlay: 'var(--overlay)', // Overlay color
-
-        // Light mode
-        bg: 'var(--background)',
-        text: 'var(--foreground)',
-        border: 'var(--border)',
-
-        // Dark mode
-        darkBg: 'var(--background)',
-        darkText: 'var(--foreground)',
-        darkBorder: 'var(--border)',
-        secondaryBlack: 'var(--secondaryBlack)', // Opposite of plain white
 
         // shadcn colors
         background: 'var(--background)',
@@ -45,7 +34,15 @@ const config: Config = {
           DEFAULT: 'var(--destructive)',
           foreground: 'var(--destructive-foreground)',
         },
-        // Add other shadcn colors as needed
+
+        // Optional: Remove or comment out if not using
+        // bg: '#fff4e0',
+        // text: '#000',
+        border: '#000000',
+        // darkBg: '#272933',
+        // darkText: '#eeefe9',
+        // darkBorder: '#000',
+        // secondaryBlack: '#212121',
       },
       fontFamily: {
         heading: ['var(--font-poppins)', ...fontFamily.sans], // Poppins for headings

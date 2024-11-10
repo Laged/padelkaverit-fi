@@ -37,10 +37,6 @@ export default function Home() {
   return (
     <main className="bg-background text-foreground">
       <HeroSection />
-      <div className="md:flex">
-        <IllustrationSection />
-        <ContentSections sections={sectionsData} />
-      </div>
     </main>
   );
 }

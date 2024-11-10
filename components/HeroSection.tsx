@@ -1,18 +1,17 @@
 // components/HeroSection.tsx
-import Image from "next/image";
+"use client";
+
 import { FC } from "react";
+import DarkModeToggle from "@/components/DarkModeToggle";
+import AnimatedSvg from "@/components/atoms/AnimatedSvg";
 
 const HeroSection: FC = () => {
   return (
-    <section className="flex h-screen items-center justify-center bg-background md p-4">
-      <Image
-        src="/images/padelkaverit.svg"
-        alt="Padelkaverit Logo"
-        width={800}
-        height={200}
-        className="invert-dark"
-        priority
-      />
+    <section className="flex min-h-screen w-full bg-main dark:bg-background transition-colors duration-500 flex flex-col items-center justify-center relative p-4">
+      <div className="absolute top-4 right-4">
+        <DarkModeToggle />
+      </div>
+      <AnimatedSvg svgPath="/images/padelkaverit.svg" />
     </section>
   );
 };
