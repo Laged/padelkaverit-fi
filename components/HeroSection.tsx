@@ -1,5 +1,4 @@
 import { FC } from "react";
-import DarkModeToggle from "@/components/DarkModeToggle";
 import AnimatedSvgThree from "./atoms/AnimatedSvgThree";
 
 const HeroSection: FC = () => {
