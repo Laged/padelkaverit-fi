@@ -33,14 +33,7 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${sourceSansPro.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
         <SpeedInsights />
       </body>
     </html>
