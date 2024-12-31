@@ -8,7 +8,7 @@ const HeroSection: FC = () => {
       <div className="absolute top-4 right-4 z-10">
         <DarkModeToggle />
       </div>
-      <div className="w-full h-full">
+      <div className="w-full h-full flex items-center justify-center p-4">
         <AnimatedSvgThree />
       </div>
     </section>

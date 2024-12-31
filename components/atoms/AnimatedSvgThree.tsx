@@ -12,29 +12,52 @@ type CornerCircleProps = {
 };
 
 function AnimatedLogo() {
-  const corners = useMemo(
-    () => [
-      {
-        position: [-1, 1] as [number, number],
-        color: [1.0, 0.4, 0.0] as [number, number, number],
-      }, // neon-orange
-      {
-        position: [1, 1] as [number, number],
-        color: [1.0, 0.0, 1.0] as [number, number, number],
-      }, // neon-purple
-      {
-        position: [1, -1] as [number, number],
-        color: [0.0, 1.0, 1.0] as [number, number, number],
-      }, // neon-cyan
-      {
-        position: [-1, -1] as [number, number],
-        color: [0.0, 1.0, 0.0] as [number, number, number],
-      }, // neon-lime
-    ],
-    []
-  );
+  const corners = useMemo(() => {
+    const z = 5;
+    const fov = 75;
+    const offset = 0.0;
+    const height = 2 * Math.tan((fov * Math.PI) / 180 / 2) * z;
+    const width = height * (203.974 / 56.025726);
+    const x = width;
+    const y = height;
 
-  const geometry = useMemo(() => new THREE.CircleGeometry(1, 32), []);
+    return [
+      {
+        position: [-x / 2 - offset, y / 2 + offset] as [number, number],
+        color: [1.0, 0.37, 0.1] as [number, number, number],
+      }, // top-left
+      {
+        position: [x / 2 + offset, y / 2 + offset] as [number, number],
+        color: [0.54, 0.17, 0.89] as [number, number, number],
+      }, // top-right
+      {
+        position: [x / 2 + offset, -y / 2 - offset] as [number, number],
+        color: [0.0, 1.0, 1.0] as [number, number, number],
+      }, // bottom-right
+      {
+        position: [-x / 2 - offset, -y / 2 - offset] as [number, number],
+        color: [0.8, 1.0, 0.0] as [number, number, number],
+      }, // bottom-left
+    ];
+  }, []);
+
+  const geometries = useMemo(() => {
+    const z = 5;
+    const fov = 75;
+    const offset = 0.0;
+    const height = 2 * Math.tan((fov * Math.PI) / 180 / 2) * z;
+    const width = height * (203.974 / 56.025726);
+
+    const radius = width + offset;
+
+    const leftGeo = new THREE.CircleGeometry(radius, 32);
+    leftGeo.translate(2, 0, 0);
+
+    const rightGeo = new THREE.CircleGeometry(radius, 32);
+    rightGeo.translate(-2, 0, 0);
+
+    return { left: leftGeo, right: rightGeo };
+  }, []);
 
   return (
     <>
@@ -44,7 +67,7 @@ function AnimatedLogo() {
           position={corner.position}
           color={corner.color}
           delay={0.2}
-          geometry={geometry}
+          geometry={corner.position[0] < 0 ? geometries.left : geometries.right}
         />
       ))}
     </>
@@ -61,28 +84,33 @@ function CornerCircle({ position, color, delay, geometry }: CornerCircleProps) {
     const elapsedTime = (Date.now() - startTime.current) / 1000 - delay;
     if (elapsedTime < 0) return;
 
-    // Scale up over 2 seconds
-    const scale = Math.min(elapsedTime / 4, 1) * 4; // 4 is max scale to ensure coverage
-    meshRef.current.scale.set(scale, scale, 1);
-
-    // Update shader time uniform
     const material = meshRef.current.material as THREE.ShaderMaterial;
-    material.uniforms.time.value = elapsedTime;
+    material.uniforms.time.value = elapsedTime * 2;
+
+    const duration = 15;
+    const tLinear = Math.min(elapsedTime / duration, 1);
+    const tEased = tLinear * tLinear * (3 - 2 * tLinear);
+    const newRadius = tEased * geometry.parameters.radius;
+    material.uniforms.radius.value = newRadius;
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      geometry={geometry}
-      position={[position[0], position[1], 0]}
-      scale={[0, 0, 1]}
-    >
+    <mesh ref={meshRef} geometry={geometry} position={[...position, 0]}>
       <shaderMaterial
-        transparent={true}
+        transparent
         blending={THREE.MultiplyBlending}
+        vertexShader={`
+          varying vec2 vUv;
+          
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `}
         fragmentShader={`
           varying vec2 vUv;
           uniform float time;
+          uniform float radius;
           uniform vec3 color;
           
           // Perlin noise functions
@@ -95,12 +123,12 @@ function CornerCircle({ position, color, delay, geometry }: CornerCircleProps) {
           }
 
           float perlinNoise(vec3 P) {
-            vec3 Pi0 = floor(P); // Integer part
-            vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
+            vec3 Pi0 = floor(P);
+            vec3 Pi1 = Pi0 + vec3(1.0);
             Pi0 = mod(Pi0, 289.0);
             Pi1 = mod(Pi1, 289.0);
-            vec3 Pf0 = fract(P); // Fractional part
-            vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0
+            vec3 Pf0 = fract(P);
+            vec3 Pf1 = Pf0 - vec3(1.0);
             vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
             vec4 iy = vec4(Pi0.yy, Pi1.yy);
             vec4 iz0 = Pi0.zzzz;
@@ -164,30 +192,22 @@ function CornerCircle({ position, color, delay, geometry }: CornerCircleProps) {
 
           void main() {
             float dist = length(vUv - 0.5) * 2.0;
-            
-            // Increased displacement and turbulence effect
-            float displacement = perlinNoise(vec3(vUv * 5.0, time * 0.5)) * 0.3;
-            float turbulence = 
-              perlinNoise(vec3(vUv * 8.0, time)) * 0.2 +
-              perlinNoise(vec3(vUv * 16.0, time * 1.5)) * 0.1;
-            
-            // Moved the edge threshold inward (from 1.0 to 0.8) to ensure noise is always visible
-            float edge = smoothstep(0.8, 0.7, dist + displacement + turbulence);
+
+            float noise =
+              perlinNoise(vec3(vUv * 32.0, time / 8.0)) * 0.5 +
+              perlinNoise(vec3(vUv * 128.0, time / 2.0)) * 0.25;
+            float distortedDist =
+              dist + (noise * 0.25) * radius * 2.0;
+
+            float edge = 1.0 - step(radius, distortedDist);
             
             vec3 finalColor = mix(vec3(1.0), color, edge);
             gl_FragColor = vec4(finalColor, 1.0);
           }
         `}
-        vertexShader={`
-          varying vec2 vUv;
-          
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `}
         uniforms={{
           time: { value: 0 },
+          radius: { value: 0 },
           color: { value: color },
         }}
       />
@@ -195,20 +215,124 @@ function CornerCircle({ position, color, delay, geometry }: CornerCircleProps) {
   );
 }
 
+function LogoMaskPath() {
+  return (
+    <defs>
+      <mask id="logoMask" maskUnits="userSpaceOnUse" mask-type="luminance">
+        <rect width="100%" height="101%" fill="white" />
+        <g transform="translate(-268.46735,-422.84293)">
+          <path
+            d="m 0,0 c 0.604,0 1.074,0.146 1.413,0.439 0.338,0.293 0.508,0.649 0.508,1.07 0,0.421 -0.17,0.778 -0.508,1.07 C 1.074,2.872 0.604,3.019 0,3.019 H -1.921 V 0 Z M -10.153,-10.565 V 8.644 H 0.96 c 1.994,0 3.705,-0.32 5.132,-0.961 C 7.519,7.043 8.598,6.178 9.33,5.09 10.061,4.002 10.427,2.808 10.427,1.509 10.427,0.21 10.061,-0.984 9.33,-2.072 8.598,-3.16 7.519,-4.025 6.092,-4.665 4.665,-5.305 2.954,-5.625 0.96,-5.625 h -2.607 v -4.94 z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,318.1348,434.36853)"
+          />
+          {/* Path 2 - A */}
+          <path
+            d="M 0,0 -1.482,-5.324 H 1.591 L 0.11,0 Z M -4.116,-13.309 H -12.76 L -4.802,5.9 h 9.879 l 7.957,-19.209 H 4.226 l -1.043,3.183 h -6.256 z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,347.77067,430.7096)"
+          />
+          {/* Path 3 - D */}
+          <path
+            d="M 0,0 C 1.116,0 2.058,0.357 2.826,1.07 3.595,1.784 3.979,2.707 3.979,3.842 3.979,4.976 3.595,5.9 2.826,6.613 2.058,7.327 1.116,7.683 0,7.683 H -1.235 V 0 Z M -9.742,-5.762 V 13.446 H 0 c 2.616,0 4.866,-0.43 6.75,-1.29 1.884,-0.86 3.311,-2.017 4.281,-3.471 C 12,7.231 12.485,5.616 12.485,3.842 12.485,2.067 12,0.453 11.031,-1.002 10.061,-2.456 8.634,-3.613 6.75,-4.473 4.866,-5.333 2.616,-5.762 0,-5.762 Z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,380.88187,440.77133)"
+          />
+          {/* Path 4 - E */}
+          <path
+            d="m 0,0 h -19.071 v 19.208 h 18.797 v -5.625 h -10.291 v -1.646 h 7.684 V 7.272 h -7.684 V 5.625 H 0 Z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,426.98147,448.45453)"
+          />
+          {/* Path 5 - L */}
+          <path
+            d="M 0,0 H -17.836 V 19.208 H -9.33 V 6.723 H 0 Z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,455.70213,448.45453)"
+          />
+          {/* Path 6 - K */}
+          <path
+            d="M 0,0 H -8.507 V 19.208 H 0 v -6.036 l 5.762,6.036 h 9.056 L 6.86,11.113 15.367,0 H 6.174 L 1.647,6.064 0,4.391 Z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,279.81,478.8684)"
+          />
+          {/* Path 7 - A */}
+          <path
+            d="M 0,0 -1.482,-5.324 H 1.591 L 0.11,0 Z M -4.116,-13.309 H -12.76 L -4.802,5.9 h 9.878 l 7.958,-19.209 H 4.226 l -1.043,3.183 h -6.256 z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,316.3972,461.12333)"
+          />
+          {/* Path 8 - V */}
+          <path
+            d="m 0,0 h -9.879 l -7.683,19.208 h 8.726 L -4.939,6.805 h 0.137 l 3.924,12.403 h 8.561 z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,354.44787,478.8684)"
+          />
+          {/* Path 9 - E */}
+          <path
+            d="m 0,0 h -19.071 v 19.208 h 18.797 v -5.625 h -10.291 v -1.646 h 7.684 V 7.272 h -7.684 V 5.625 H 0 Z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,393.04693,478.8684)"
+          />
+          {/* Path 10 - R */}
+          <path
+            d="m 0,0 v -2.744 h 2.195 c 0.604,0 1.075,0.123 1.414,0.37 0.338,0.247 0.507,0.581 0.507,1.002 0,0.421 -0.169,0.755 -0.507,1.001 C 3.27,-0.124 2.799,0 2.195,0 Z M 13.583,-13.583 H 4.445 l -2.881,5.214 h -1.29 v -5.214 H -8.232 V 5.625 H 3.156 c 2.085,0 3.837,-0.301 5.255,-0.905 1.417,-0.604 2.474,-1.432 3.169,-2.484 0.695,-1.052 1.043,-2.254 1.043,-3.608 0,-1.244 -0.288,-2.356 -0.865,-3.334 -0.576,-0.979 -1.431,-1.77 -2.565,-2.374 z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,408.9624,460.7576)"
+          />
+          {/* Path 11 - I */}
+          <path
+            d="m 331.281,66.046 h -8.507 v 19.208 h 8.507 z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,0,566.92933)"
+          />
+          {/* Path 12 - T */}
+          <path
+            d="m 0,0 h -8.507 v 12.486 h -5.899 v 6.722 H 5.9 V 12.486 H 0 Z"
+            fill="black"
+            transform="matrix(1.3333333,0,0,-1.3333333,464.57467,478.8684)"
+          />
+        </g>
+      </mask>
+    </defs>
+  );
+}
+
 export default function AnimatedSvgThree() {
   return (
-    <div className="w-full h-full absolute bg-white">
-      <Canvas
-        style={{ width: "100%", height: "100%" }}
-        camera={{
-          position: [0, 0, 5],
-          zoom: 1,
+    <div className="relative w-full mx-auto bg-transparent aspect-[203.974/56.025726] max-w-full">
+      <div className="absolute inset-0">
+        <Canvas
+          style={{ width: "100%", height: "100%" }}
+          camera={{
+            position: [0, 0, 5],
+            aspect: 203.974 / 56.025726,
+          }}
+          gl={{ alpha: true }}
+        >
+          <color attach="background" args={["transparent"]} />
+          <AnimatedLogo />
+        </Canvas>
+      </div>
+
+      <svg
+        className="absolute inset-0"
+        viewBox="0 0 203.974 56.025726"
+        preserveAspectRatio="xMidYMid slice"
+        style={{
+          width: "100%",
+          height: "100%",
         }}
-        gl={{ alpha: true }}
       >
-        <color attach="background" args={["#FFFFFF"]} />
-        <AnimatedLogo />
-      </Canvas>
+        <LogoMaskPath />
+        <rect
+          width="100%"
+          height="110%"
+          fill="white"
+          mask="url(#logoMask)"
+          style={{ shapeRendering: "crispEdges" }}
+        />
+      </svg>
     </div>
   );
 }
