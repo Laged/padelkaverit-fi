@@ -6,12 +6,14 @@ interface ReusableBackgroundProps {
   maskId: string;
   config: SVGConfig;
   children: React.ReactNode;
+  delay?: number;
 }
 
 export function ReusableBackground({
   maskId,
   config,
   children,
+  delay = 0.2,
 }: ReusableBackgroundProps) {
   const { viewBox } = config;
 
@@ -22,7 +24,7 @@ export function ReusableBackground({
     >
       <div className="absolute inset-0">
         <AnimatedScene aspectRatio={viewBox.width / viewBox.height}>
-          <CornerCircles delay={0.2} />
+          <CornerCircles delay={delay} />
         </AnimatedScene>
       </div>
 
@@ -37,7 +39,7 @@ export function ReusableBackground({
       >
         {children}
         <rect
-          width="100%"
+          width="110%"
           height="110%"
           fill="white"
           mask={`url(#${maskId})`}
