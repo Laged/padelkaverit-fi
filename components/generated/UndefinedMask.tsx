@@ -612,5 +612,5 @@ export const config: SVGConfig = {
         "translate(-91.498705,-177.59767) matrix(1.3333333,0,0,-1.3333333,281.2392,1228.206)",
     },
   ],
-  baseTransform: undefined,
+  baseTransform: "",
 };
