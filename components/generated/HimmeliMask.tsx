@@ -2,8 +2,8 @@ import { SVGConfig } from "../types";
 
 export const config: SVGConfig = {
   viewBox: {
-    width: 938.56267,
-    height: 1232.7878,
+    width: 939,
+    height: 1233,
   },
   paths: [
     {

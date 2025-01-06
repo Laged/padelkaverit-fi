@@ -35,15 +35,20 @@ export function ReusableBackground({
         style={{
           width: "100%",
           height: "100%",
+          shapeRendering: "geometricPrecision",
+          textRendering: "geometricPrecision",
         }}
       >
         {children}
         <rect
-          width="110%"
-          height="110%"
+          width="100%"
+          height="100%"
           fill="white"
           mask={`url(#${maskId})`}
-          style={{ shapeRendering: "crispEdges" }}
+          style={{
+            shapeRendering: "crispEdges",
+            vectorEffect: "non-scaling-stroke",
+          }}
         />
       </svg>
     </div>

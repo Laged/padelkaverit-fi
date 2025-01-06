@@ -19,7 +19,7 @@ export function AnimatedScene({
       }}
       gl={{ alpha: true }}
     >
-      <color attach="background" args={["transparent"]} />
+      <color attach="background" args={["white"]} />
       {children}
     </Canvas>
   );
