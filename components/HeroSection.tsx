@@ -1,11 +1,18 @@
 import { FC } from "react";
-import AnimatedSvgThree from "./atoms/AnimatedSvgThree";
+import { PadelKaverit } from "./atoms/PadelKaverit";
+import { Illustration } from "./atoms/Illustration";
+import FullScreenSection from "./atoms/FullScreenSection";
 
 const HeroSection: FC = () => {
   return (
-    <section className="fixed inset-0 w-screen h-screen overflow-hidden bg-main dark:bg-background transition-colors duration-500">
-      <div className="w-full h-full flex items-center justify-center p-4">
-        <AnimatedSvgThree />
+    <section className="fixed inset-0 w-screen overflow-y-auto">
+      <div className="w-full h-full flex flex-col px-4">
+        <FullScreenSection>
+          <PadelKaverit />
+        </FullScreenSection>
+        <FullScreenSection>
+          <Illustration />
+        </FullScreenSection>
       </div>
     </section>
   );
