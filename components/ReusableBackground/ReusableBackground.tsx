@@ -1,7 +1,8 @@
+import { useRef } from "react";
+import { useInView } from "framer-motion";
 import { AnimatedScene } from "../AnimatedScene/AnimatedScene";
 import { CornerCircles } from "../CornerCircles/CornerCircles";
 import { SVGConfig } from "../Masks/types";
-
 interface ReusableBackgroundProps {
   maskId: string;
   config: SVGConfig;
@@ -16,15 +17,18 @@ export function ReusableBackground({
   delay = 0.2,
 }: ReusableBackgroundProps) {
   const { viewBox } = config;
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.5 });
 
   return (
     <div
+      ref={containerRef}
       className="relative w-full mx-auto bg-transparent"
       style={{ aspectRatio: viewBox.width / viewBox.height }}
     >
       <div className="absolute inset-0">
         <AnimatedScene aspectRatio={viewBox.width / viewBox.height}>
-          <CornerCircles delay={delay} />
+          {isInView && <CornerCircles delay={delay} />}
         </AnimatedScene>
       </div>
 

@@ -39,7 +39,7 @@ export function Illustration() {
   const aspectRatio = viewBox.width / viewBox.height;
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-4">
+    <div className="w-full h-full flex items-center justify-center">
       <div
         className="relative w-full max-h-screen"
         style={{
